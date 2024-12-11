@@ -1,0 +1,8 @@
+{
+  "WorkingDir": ".",
+  "SourceDir": ["."],
+  "SourceExt": [".c", ".cpp", ".go", ".h"],
+  "BuildCmd": "go build run main.go",
+  "RunCmd": "weeraphat2000.exe",
+  "Decreasing": 1
+}
