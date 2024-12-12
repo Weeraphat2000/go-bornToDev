@@ -201,7 +201,8 @@ func main() {
 	fmt.Println(" ")
 	fmt.Println("pointer")
 	var num8 int = 10
-	var ptr *int = &num8
+	var ptr *int = &num8 // *int คือ pointer ที่เก็บค่า reference ของตัวแปร num8
+	// &num8 คือการเข้าถึง address ของตัวแปร num8
 	fmt.Println(num8, "num8")
 	fmt.Println(ptr, "pointer")
 	fmt.Println(*ptr, "pointer value")
@@ -219,6 +220,11 @@ func main() {
 	fmt.Println(value4, value4 > 20)
 	value5, array5 := add3(20, 20) // จะ return ค่ากลับมา 2 ค่า และเก็บค่าไว้ในตัวแปร เรียงตามลำดับที่ return กลับมา
 	fmt.Println(value5, array5[1:])
+	fmt.Println(sum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+	numss := 123
+	fmt.Println(numss)
+	changeNum(numss)
+	fmt.Println(numss, "changeNum") // การส่งค่าไปใน function แล้วแก้ไขค่าใน function จะไม่ส่งผลกระทบกับค่าตัวแปรที่ส่งไป
 
 	// การใช้งาน interface
 	fmt.Println(" ")
@@ -227,6 +233,7 @@ func main() {
 
 	// การใช้งาน if else
 	fmt.Println(" ")
+	fmt.Println("if else, condition")
 	nums := 10
 	if nums > 10 {
 		fmt.Println("more than 10")
@@ -238,6 +245,7 @@ func main() {
 
 	// การใช้งาน switch case
 	fmt.Println(" ")
+	fmt.Println("switch case")
 	nums2 := 5
 	switch nums2 {
 	case 1:
@@ -356,4 +364,16 @@ type TestInterface interface {
 // ฟังก์ชัน Generic ที่รองรับ TestInterface
 func PrintValue[T TestInterface](value T) {
 	fmt.Println(value)
+}
+
+func sum(num1 ...int) int { // รับค่าแบบไม่จำกัดจำนวนแต่ต้องเป็น int
+	total := 0
+	for _, value := range num1 {
+		total += value
+	}
+	return total
+}
+
+func changeNum(numss int) {
+	numss = 20
 }
