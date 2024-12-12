@@ -16,9 +16,18 @@ import (
 
 func main() {
 
+	// การใช้งาน any
+	fmt.Println(" ")
+	fmt.Println("any")
+	// any คือ จะเอาไวว้เช็คว่า value, type ได้
+	// any = interface{} คือ เป็น type อะไรก็ได้
+	// any(ค่าที่ต้องการเช็ค).(type ที่ต้องการเช็ค) ถ้าเป็น type ที่ต้องการจะ return 2 ค่า คือ value และ true ถ้าไม่ใช่ type ที่ต้องการจะ return 2 ค่า คือ 0(type int), 0.0(type float64), ""(type string) และ false
+	Value, Check := any(12312).(string)
+	fmt.Println(Value, Check) // การใช้งาน type assertion
+
 	fmt.Println("Hello, World!") // fp key ลัดเพื่อใช้ fmt.Println
-	num := 10
-	var num2 int = 20
+	num := 10                    // ถ้าประกาศตัวแปรแบบนี้จะไม่สามารถกำหนด type ได้
+	var num2 int = 20            // ถ้าประกาศตัวแปรแบบนี้จะสามารถกำหนด type ได้ หรือไม่ก็ไม่กำหนด type ก็ได้
 	fmt.Println(num + num2)
 	var num4, num5 int = 40, 50
 	fmt.Println(num4 + num5)
@@ -128,6 +137,10 @@ func main() {
 	slice2 := []int{1, 2, 3, 4, 5, 6, 7}
 	slice2 = append(slice2[:3], slice2[5:]...) // การลบค่าใน slice
 	fmt.Println(slice2, "slice 2")
+	list := []int{}
+	fmt.Println(list, "list") // output: [] ถ้าไม่มีค่าให้แสดงค่าเป็น []
+	var list2 []int = nil
+	fmt.Println(list2, "list2") // output: [] ถ้าไม่มีค่าให้แสดงค่าเป็น []
 
 	// การใช้งาน map
 	fmt.Println(" ")
@@ -155,7 +168,7 @@ func main() {
 		"height":  1.75,
 	}
 	fmt.Println(data, "map interface")
-	age, ok := data["age"].(int) // การเช็คว่า value นั้นมี type ตามที่ต้องการหรือไม่
+	age, ok := data["age"].(int) // การเช็คว่า value นั้นมี type ตามที่ต้องการหรือไม่ และเช็คว่า value นั้นเป็น int หรือไม่
 	if ok {
 		fmt.Println("Age is an integer:", age)
 	} else {
@@ -196,6 +209,40 @@ func main() {
 	fmt.Println(sp1.person2.name)
 	sp1.person2.name = "hun" // การแก้ไขค่าใน struct ซ้อน struct
 	fmt.Println(sp1.person2.name)
+	type employee struct {
+		name   string
+		weight int
+		enable bool
+	}
+	employeeList := []employee{
+		{
+			name:   "12",
+			weight: 1234,
+			enable: true,
+		},
+		{
+			name: "23",
+		},
+	}
+	employeeList[0].weight = 123123123213
+	fmt.Println(employeeList, "employeeList")
+	fmt.Println(employeeList[0], employeeList[0].name)
+	fmt.Println(employeeList[1].weight, "weight") // ถ้าไม่มี key นั้นจะได้ 0 ออกมา int
+	fmt.Println(employeeList[1].name, "name")     // ถ้าไม่มี key นั้นจะได้ "" ออกมา string
+	fmt.Println(employeeList[1].enable, "enable") // ถ้าไม่มี key นั้นจะได้ false ออกมา bool
+	// fmt.Println(employeeList[12])                 // ถ้าไม่มี index นั้นจะได้ error
+	data12 := []int{1, 2}
+	index12 := 12
+	if index12 >= 0 && index12 < len(data) {
+		fmt.Println("Accessing index:", data12[index12])
+	} else {
+		fmt.Println("Index out of range:", index12)
+	}
+	ex := test.Export{
+		Export1: "Export1",
+		Export2: "Export2",
+	}
+	fmt.Println(ex, "export")
 
 	// การใช้งาน pointer
 	fmt.Println(" ")
@@ -227,6 +274,7 @@ func main() {
 	fmt.Println(numss, "changeNum") // การส่งค่าไปใน function แล้วแก้ไขค่าใน function จะไม่ส่งผลกระทบกับค่าตัวแปรที่ส่งไป
 
 	// การใช้งาน interface
+	// interface คือ สามารถเก็บค่าได้หลายชนิด และเก็บค่าได้หลายชนิดในตัวเดียวกัน
 	fmt.Println(" ")
 	fmt.Println("interface")
 	fmt.Println(circle{radius: 10}.area())
@@ -255,7 +303,7 @@ func main() {
 	case 3:
 		fmt.Println("three")
 	default:
-		fmt.Println("default")
+		fmt.Println("default") // ถ้าไม่ตรงกับ case ใดๆเลยจะทำงาน case default
 	}
 
 	// การใช้งาน loop
@@ -278,7 +326,7 @@ func main() {
 		fmt.Println(index)
 	}
 	for index := 0; index < len(nums3); index++ {
-		fmt.Println(nums3[index])
+		fmt.Println(index, nums3[index])
 	}
 	type structOfArray struct {
 		name string
@@ -304,6 +352,10 @@ func main() {
 		fmt.Println(nums4)
 		nums4++
 	}
+	for {
+		fmt.Println("true")
+		break
+	}
 
 	// การใช้งาน do while loop
 	fmt.Println(" ")
@@ -327,6 +379,8 @@ func main() {
 	PrintValue(true)   // Output: true
 	//
 	//
+	var number23 int
+	fmt.Scanf("%d", &number23)
 
 }
 
