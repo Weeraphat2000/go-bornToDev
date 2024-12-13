@@ -26,9 +26,13 @@ func add(a, b int) int {
 
 func f() {
 	fmt.Println("1")
-	defer s()
+
+	// last in first out คือ การทำงานของ defer จะถูกเรียกใช้งานตามลำดับที่ถูกเรียกใช้งาน
+	// s() จะทำงานก่อน fmt.Println("2") เพราะว่าใช้ defer ทีหลัง
 	defer fmt.Println("2")
+	defer s()
 	fmt.Println("3")
+
 }
 
 func s() {
