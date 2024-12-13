@@ -17,6 +17,10 @@ type circle struct {
 	radius int
 }
 
+func area(r rectangular, unit string) (int, string) {
+	return r.width * r.height, unit
+}
+
 func (r rectangular) area() int {
 	return r.width * r.height
 }
@@ -35,7 +39,12 @@ func main() {
 	r := rectangular{width: 10, height: 5}
 	c := circle{radius: 5}
 
+	fmt.Println("r", r)
 	fmt.Println("Rectangle"+" "+"Area:", r.area())
+
+	areaValue, unit := area(r, "cm")
+	fmt.Println("Area:", areaValue, unit)
+
 	fmt.Println("Rectangle"+" "+"Perimeter:", r.perim())
 
 	fmt.Println("Circle"+" "+"Area:", c.area())

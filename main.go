@@ -5,8 +5,9 @@
 package main
 
 import (
-	"fmt"     // เอาไว้ print ข้อความ
-	"math"    // เอาไว้ใช้งานพวกคำนวณเลข (pow, sqrt, max, min และอื่นๆ)
+	"fmt"  // เอาไว้ print ข้อความ
+	"math" // เอาไว้ใช้งานพวกคำนวณเลข (pow, sqrt, max, min และอื่นๆ)
+	"strconv"
 	"strings" // เอาไว้ใช้งานพวก string (uppercase, lowercase, contains, replace, split, join, length, index, substring, slice, map, if else, switch case และอื่นๆ
 
 	"github.com/weeraphat2000/test"
@@ -272,6 +273,9 @@ func main() {
 	fmt.Println(numss)
 	changeNum(numss)
 	fmt.Println(numss, "changeNum") // การส่งค่าไปใน function แล้วแก้ไขค่าใน function จะไม่ส่งผลกระทบกับค่าตัวแปรที่ส่งไป
+	fmt.Println(rectangularArea(rectType{width: 10, height: 5}, "cm^2"), "rectangularArea")
+	fmt.Println(triangularArea(10, 5), "triangular")
+	fmt.Println(triangularArea(10, 5).area, "triangularArea")
 
 	// การใช้งาน interface
 	// interface คือ สามารถเก็บค่าได้หลายชนิด และเก็บค่าได้หลายชนิดในตัวเดียวกัน
@@ -431,3 +435,48 @@ func sum(num1 ...int) int { // รับค่าแบบไม่จำกั�
 func changeNum(numss int) {
 	numss = 20
 }
+
+type rectType struct {
+	width, height int
+}
+
+func rectangularArea(r rectType, unit string) string {
+	return strconv.Itoa(r.width*r.height) + unit // strconv.Itoa คือ แปลง int เป็น string
+}
+
+type triangularReturnType struct {
+	area, perimeter int
+}
+
+func triangularArea(base, height int) triangularReturnType {
+	area := base * height / 2
+	perimeter := base + height + int(math.Sqrt(float64(base*base+height*height)))
+	return triangularReturnType{area: area, perimeter: perimeter}
+}
+
+//
+// strconv.Atoi	string เป็น int ใช้ได้เฉพาะ base 10
+// strconv.ParseInt	string เป็น int64 รองรับ base (2, 10, 16, ฯลฯ)
+// strconv.FormatInt	int64 เป็น string ระบุ base
+// strconv.ParseFloat	string เป็น float64
+// strconv.FormatFloat	float64 เป็น string ควบคุมทศนิยมและรูปแบบ
+// strconv.ParseBool	string เป็น bool รับค่า "true" หรือ "false"
+// strconv.FormatBool	bool เป็น string
+// strconv.Itoa	int เป็น string
+
+//
+// strings.Contains ค้นหาคำนั้นมีคำที่ต้องการหรือไม่ เช่น strings.Contains("hello world", "world") // Output: true
+// strings.ToUpper แปลง string เป็น uppercase เช่น strings.ToUpper("hello world") // Output: HELLO WORLD
+// strings.ToLower แปลง string เป็น lowercase เช่น strings.ToLower("HELLO WORLD") // Output: hello world
+// strings.Title แปลง string เป็น title เช่น strings.Title("hello world") // Output: Hello World
+// strings.Trim ตัดช่องว่างหน้าและหลัง string เช่น strings.Trim(" hello world ", " ") // Output: hello world
+// strings.Split แยก string เป็น array เช่น strings.Split("a,b,c", ",") // Output: [a b c]
+// strings.Join รวม array เป็น string เช่น strings.Join([]string{"hello", "world"}, " ") // Output: hello world
+// strings.Replace แทนที่ string เช่น strings.Replace("hello world", "world", "golang", 1) เลข 1 คือ จำนวนที่จะแทนที่ // Output: hello golang
+// strings.ReplaceAll แทนที่ string ทั้งหมด เช่น strings.ReplaceAll("foo bar foo", "foo", "baz") // Output: baz bar baz
+// strings.Repeat ทำซ้ำ string เช่น strings.Repeat("go", 3) // Output: gogogo
+// strings.Index หา index ของ string เช่น strings.Index("hello world", "world") // Output: 6
+// strings.HasPrefix ตรวจสอบว่า string นั้นขึ้นต้นด้วยคำที่ต้องการหรือไม่ เช่น strings.HasPrefix("golang", "go") // Output: true
+// strings.HasSuffix ตรวจสอบว่า string นั้นลงท้ายด้วยคำที่ต้องการหรือไม่ เช่น strings.HasSuffix("golang", "lang") // Output: true
+// strings.Fields แยก string ด้วยช่องว่าง เช่น strings.Fields("hello world golang") // Output: [hello world golang]
+// strings.SplitN แยก string ด้วยคำที่ต้องการและระบุจำนวนที่แยก เช่น strings.SplitN("a,b,c", ",", 2) // Output: [a b,c]
