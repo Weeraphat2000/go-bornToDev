@@ -5,6 +5,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"  // เอาไว้ print ข้อความ
 	"math" // เอาไว้ใช้งานพวกคำนวณเลข (pow, sqrt, max, min และอื่นๆ)
 	"strconv"
@@ -395,6 +396,24 @@ func main() {
 		return text1 + text2
 	}(text1, text2) // Output: Hello World คือการสร้าง function แบบไม่ต้องประกาศ และเรียกใช้งานในตัวเดียวกัน
 
+	//
+	//
+	//
+	fmt.Println(" ")
+	fmt.Println("json")
+	// json.Marshel คือ เอาไว้จัดการข้อมูลแบบ json โดยจะแปลงข้อมูลจาก struct ให้เป็น byte
+	data1, _ := json.Marshal(&employee11{ID: 1, Name: "John", Email: "example@gmail.com"}) // json.Marshal จะได้ข้อมูลเป็น byte
+	fmt.Println(string(data1))                                                             // แปลงข้อมูลให้เป็น string
+
+	e := employee11{}
+	// json.Unmarshal คือ เอาไว้จัดการข้อมูลแบบ json โดยจะแปลงข้อมูลจาก byte ให้เป็น struct
+	err := json.Unmarshal([]byte(`{"ID":101,"Name":"Hun","Email":"hun@gmail.com"}`), &e) // json.Unmarshal จะแปลงข้อมูลจาก byte ให้เป็น struct
+
+	if err != nil {
+		fmt.Println("Error", err)
+	}
+	fmt.Println(e, e.ID) // แสดงข้อมูล struct และ key ที่ต้องการ
+
 }
 
 func add(num1 int, num2 int) int {
@@ -461,6 +480,12 @@ func triangularArea(base, height int) triangularReturnType {
 	area := base * height / 2
 	perimeter := base + height + int(math.Sqrt(float64(base*base+height*height)))
 	return triangularReturnType{area: area, perimeter: perimeter}
+}
+
+type employee11 struct { // สร้าง struct ชื่อ employee
+	ID    int // key ค้องขึ้นต้นด้วยตัวใหญ่
+	Name  string
+	Email string
 }
 
 //
