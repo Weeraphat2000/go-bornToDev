@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"  // เอาไว้ print ข้อความ
 	"math" // เอาไว้ใช้งานพวกคำนวณเลข (pow, sqrt, max, min และอื่นๆ)
+	"sort"
 	"strconv"
 	"strings" // เอาไว้ใช้งานพวก string (uppercase, lowercase, contains, replace, split, join, length, index, substring, slice, map, if else, switch case และอื่นๆ
 
@@ -152,6 +153,21 @@ func main() {
 	fmt.Println(list, "list") // output: [] ถ้าไม่มีค่าให้แสดงค่าเป็น []
 	var list2 []int = nil
 	fmt.Println(list2, "list2") // output: [] ถ้าไม่มีค่าให้แสดงค่าเป็น []
+
+	// การใช้งาน copy
+	fmt.Println(" ")
+	fmt.Println("copy") // copy คือ การ copy ค่าจาก array หรือ slice ไปยัง array หรือ slice อีกตัวหนึ่ง โอยจะ copy by value
+	srcSlice := []int{1, 2, 3, 4, 5}
+	destSlice := make([]int, len(srcSlice))
+	copy(destSlice, srcSlice)
+	fmt.Println(destSlice, "copy")
+
+	// การใช้งาน sort
+	fmt.Println(" ")
+	fmt.Println("sort")
+	sort2 := []int{3, 2, 1, 5, 4}
+	sort.Ints(sort2)
+	fmt.Println(sort2, "sort")
 
 	// การใช้งาน map
 	fmt.Println(" ")
