@@ -64,6 +64,15 @@ func main() {
 	fmt.Printf("age: %d\n", 30)
 	var isTrue bool = true
 	fmt.Println(isTrue)
+	x := 10
+	x += 5                 // x = x + 5
+	x -= 5                 // x = x - 5
+	x *= 5                 // x = x * 5
+	x /= 5                 // x = x / 5
+	x %= 5                 // x = x % 5
+	x++                    // x = x + 1
+	x--                    // x = x - 1
+	fmt.Println(x, "PPPP") // 0
 
 	// การใช้งาน string
 	fmt.Println(" ")
