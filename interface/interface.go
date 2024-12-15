@@ -64,6 +64,23 @@ func main() {
 	fmt.Println("Amount:", hun.Bmount())
 	fmt.Println("Total Price:", hun.totalPrice("THB"))
 
+	//
+	//
+	//
+	//
+	//
+	// mikelopster
+	dog := Dog{Name: "Dog"}
+	person := Person{Name: "Person"}
+	makeSound(dog) // makeSound(dog) จะเรียกใช้ method Speak ของ struct Dog, makeSound จะเช็คว่า dog มี method Speak หรือไม่ ถ้ามีจะเรียกใช้ method Speak ของ struct Dog
+	// fmt.Println("Dog:", dog.Speak())
+
+	fmt.Println("Person:", person.Speak())
+	makeSound(person) // makeSound(person) จะเรียกใช้ method Speak ของ struct Person, makeSound จะเช็คว่า person มี method Speak หรือไม่ ถ้ามีจะเรียกใช้ method Speak ของ struct Person
+
+	walk(dog)
+	fmt.Println("Dog:", dog.Walk())
+
 }
 
 type TestInterface interface {
@@ -110,4 +127,43 @@ func (b bicycle) Bmount() int {
 
 func (b bicycle) Brand() string {
 	return b.brand
+}
+
+// mikelopster
+// speaker interface
+// ถ้า struct ต้องการ implement interface จะต้องมี method ที่กำหนดใน interface ทุกตัว
+type Speaker interface {
+	Speak() string // method ที่ต้องมีใน struct ที่จะ implement interface นี้ได้
+	Walk() string
+}
+
+// dog struct
+type Dog struct {
+	Name string
+}
+
+func (d Dog) Speak() string {
+	return d.Name + " says Woof!"
+}
+
+func (d Dog) Walk() string {
+	return d.Name + " is walking"
+}
+
+type Person struct {
+	Name string
+}
+
+func (p Person) Speak() string {
+	return p.Name + " says Hello!"
+}
+func (p Person) Walk() string {
+	return p.Name + " is walking"
+}
+
+func makeSound(s Speaker) {
+	fmt.Println(s.Speak())
+}
+func walk(s Speaker) {
+	fmt.Println(s.Walk())
 }
