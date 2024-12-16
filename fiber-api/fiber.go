@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -33,6 +35,8 @@ func main() {
 	app.Delete("/books/:id", deleteBook)
 
 	app.Post("/upload", uploadFile)
+
+	app.Get("/getENV", getENV)
 
 	app.Listen(":3000") // Listen on port 3000
 	// ถ้ายิ่งไปที่ที่ยังไม่มี port รองรับ จะได้ Method Not Allowed 405 (go fiber เป็นคนจัดการให้)
@@ -68,5 +72,19 @@ func uploadFile(c *fiber.Ctx) error {
 	// Return success message
 	return c.JSON(fiber.Map{
 		"message": "Files uploaded successfully",
+	})
+}
+
+func getENV(c *fiber.Ctx) error {
+	err := godotenv.Load() // โหลด .env
+	if err != nil {
+		fmt.Println("Error loading .env file")
+	}
+	fmt.Println("err", err)
+
+	env := os.Getenv("DATABASE_URL") // ดึงค่าจาก .env จะต้องมี godotenv.Load() ก่อน
+	fmt.Println("env", env)
+	return c.JSON(fiber.Map{
+		"databaseUrl": os.Getenv("DATABASE_URL"),
 	})
 }
