@@ -1,5 +1,8 @@
 package main
 
+// go install github.com/swaggo/swag/cmd/swag@latest // ติดตั้ง swag
+// swag init // สร้าง docs โดยใช้ swag
+
 import (
 	"fmt"
 	"strconv"
@@ -34,6 +37,16 @@ var books = []*Book{
 	},
 }
 
+// Handler functions
+// getBooks godoc
+// @Summary Get all books
+// @Description Get details of all books
+// @Tags books
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} Book
+// @Router /books [get]
+// @Security ApiKeyAuth
 func getBooks(c *fiber.Ctx) error {
 	return c.JSON(books) // ส่งค่า books ออกไปในรูปแบบ json
 }

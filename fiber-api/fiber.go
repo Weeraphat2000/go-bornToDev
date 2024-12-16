@@ -1,5 +1,9 @@
 package main
 
+// go install github.com/swaggo/swag/cmd/swag@latest // ติดตั้ง swag
+// go get github.com/gofiber/swagger // ติดตั้ง swagger โดยใช้ go get
+// swag init // สร้าง docs โดยใช้ swag
+
 import (
 	"fmt"
 	"os"
@@ -12,6 +16,9 @@ import (
 	"github.com/joho/godotenv"
 
 	jwtware "github.com/gofiber/jwt/v2"
+
+	"github.com/gofiber/swagger"
+	_ "github.com/weeraphat2000/docs" // docs คือ ชื่อ folder ที่เก็บ swagger ที่สร้างขึ้นมา
 )
 
 type User struct {
@@ -94,6 +101,16 @@ func checkMidleware(c *fiber.Ctx) error {
 	return c.Next()
 }
 
+// เหมือนจะต้องเอาไปเขียนที่ main.go แต่เราเอามาเขียนที่นี่เพื่อให้เข้าใจง่ายขึ้น
+// @title Book API
+// @description This is a sample server for a book API.
+// @version 1.0
+// @host localhost:8080
+// @BasePath /
+// @schemes http
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	// gin
 	// echo
@@ -101,6 +118,8 @@ func main() {
 	fmt.Println("Hello, Fiber!")
 	//
 	app := fiber.New() // Create a new Fiber instance
+
+	app.Get("/swagger/*", swagger.HandlerDefault) // สร้าง swagger UI โดยใช้ swagger.HandlerDefault
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
@@ -153,7 +172,13 @@ func main() {
 	})
 
 	// print(books) // print คือ แสดง memory address ของตัวแปร
-	app.Get("/books", middleware, getBooks)
+	app.Get("/books",
+		middleware,
+		// jwtware.New(jwtware.Config{
+		// 	SigningKey: []byte("secretkey"),
+		// }),
+		// checkMidleware,
+		getBooks)
 	app.Get("/books/:id", getBook)
 	app.Post("/books", createBook)
 	app.Patch("/books/:id", updateBook)

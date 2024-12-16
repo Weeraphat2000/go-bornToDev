@@ -1,0 +1,56 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/books": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get details of all books",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "books"
+                ],
+                "summary": "Get all books",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.Book"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.Book": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID คือ field ที่ต้องการรับเข้ามา\nint คือ type ของ field นั้น\njson:\"id\" คือ tag ที่ใช้เพื่อบอกว่า field นี้จะถูกแปลงเป็น json โดยใช้ชื่อ id แล้วจะแปลงให้อยู่ใน field ที่มีชื่อ ID ของ struct นี้ (map กับ struct แล้วได้ข้อมูลออกมา (เป็น json ต้องมี key ที่เป็น string และ value ที่เป็น string, number, boolean, array, object))",
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
