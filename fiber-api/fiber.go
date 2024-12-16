@@ -2,7 +2,7 @@ package main
 
 // go install github.com/swaggo/swag/cmd/swag@latest // ติดตั้ง swag
 // go get github.com/gofiber/swagger // ติดตั้ง swagger โดยใช้ go get
-// swag init // สร้าง docs โดยใช้ swag
+// swag init // สร้าง docs โดยใช้ swag เมื่อมีการเปลี่ยนแปลง swagger ต้องรันคำสั่งนี้ใหม่
 
 import (
 	"fmt"
