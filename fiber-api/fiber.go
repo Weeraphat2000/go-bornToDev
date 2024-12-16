@@ -3,11 +3,96 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/golang-jwt/jwt/v4"
+
 	"github.com/joho/godotenv"
+
+	jwtware "github.com/gofiber/jwt/v2"
 )
+
+type User struct {
+	email    string
+	password string
+}
+
+var user = User{
+	email:    "user@gmail.com",
+	password: "1234",
+}
+
+func login(c *fiber.Ctx) error {
+	type Login struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	var loginVals Login
+	err := c.BodyParser(&loginVals)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	if loginVals.Email != user.email || loginVals.Password != user.password {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Email or password is incorrect",
+		})
+	}
+
+	// Create token
+	token := jwt.New(jwt.SigningMethodHS256)
+
+	// Set claims
+	// token.Claims เป็นอินเตอร์เฟซที่เก็บข้อมูลของ claims (เช่น payload ของ JWT)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["email"] = loginVals.Email
+	claims["role"] = "admin"
+	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+	fmt.Println("token", token)
+	fmt.Println("claims", claims) // map[exp:1631530007 email: "..."]
+
+	// Generate encoded token and send it as response.
+	t, err := token.SignedString([]byte("secretkey")) // สร้าง token และ encode ด้วย secretkey
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+	fmt.Println("t", t) // token ที่ถูก encode แล้ว
+
+	return c.JSON(fiber.Map{"token": t})
+}
+
+func checkMidleware(c *fiber.Ctx) error {
+
+	fmt.Println("locals(user)", c.Locals("user"))
+
+	user := c.Locals("user").(*jwt.Token)
+	// c.Locals("user") คือ การดึงค่า user ออกมาจาก context ของ c
+	// *jwt.Token คือ การแปลง user ให้เป็น pointer ของ jwt.Token
+	claims := user.Claims.(jwt.MapClaims)
+	// user.Claims.(jwt.MapClaims) คือ การดึงค่า claims ออกมาจาก user
+	fmt.Println("claims", claims) // claims คือ map เช่น map[exp:1631530007 email: "..."]
+	email := claims["email"]
+	role := claims["role"]
+	fmt.Println("email", email)
+	if role != "admin" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Unauthorized",
+		})
+	}
+
+	// คือ เพิ่มค่าใน context ของ c โดยใช้ key ชื่อ email และ value คือ email
+	c.Locals("email", email)
+
+	// เพื่ม key ชื่อ Hun และ value คือ Hun ใน context ของ c
+	c.Locals("Hun", "Hun")
+
+	return c.Next()
+}
 
 func main() {
 	// gin
@@ -22,11 +107,51 @@ func main() {
 		AllowMethods: "GET,POST,HEAD,PUT,PATCH,DELETE",
 		// AllowHeaders: "*",
 	}))
-
 	app.Get("/", func(c *fiber.Ctx) error {
 		fmt.Println("Hello, Fiber!")
 		return c.SendString("Hello, Fiber!")
 	})
+
+	app.Post("/login", login)
+
+	// app.User คือ การใช้ middleware ทุก route ที่ตามหลัง
+	// app.Use(jwtware.New(jwtware.Config{
+	// 	SigningKey: []byte("secretkey"),
+	// })) // ต้องมี token ถึงจะเข้าได้ ถ้าไม่มีจะเข้าไม่ได้ และต้องเป็น token ที่ถูก encode ด้วย secretkey และถูกต้องด้วย
+	// เช็คให้อัตโนมัติว่าส่งเข้ามาใน header authorization หรือไม่ ถ้าไม่ส่งเข้ามาจะไม่สามารถเข้าได้
+
+	app.Get("/testJWTMiddleware",
+
+		// ต้องส่ง authorization bearer token ที่ถูก encode ด้วย secretkey และถูกต้องด้วย
+		jwtware.New(jwtware.Config{
+			SigningKey: []byte("secretkey"),
+		}),
+
+		checkMidleware,
+
+		func(c *fiber.Ctx) error {
+
+			email := c.Locals("email")
+			fmt.Println("email in testJWTMiddleware", email)
+
+			// ถ้าไม่มี email ก็จะได้ nil(nil คือ ค่าว่าง (null))
+			if email == nil {
+				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+					"error": "ทำไมไม่มี email",
+				})
+			}
+
+			return c.JSON(fiber.Map{
+				"email": c.Locals("email"),
+				"Hun":   c.Locals("Hun"),
+			})
+		})
+
+	app.Use(func(c *fiber.Ctx) error {
+		fmt.Printf("URL: %s, Method: %s, Time: %s\n", c.OriginalURL(), c.Method(), time.Now())
+		return c.Next()
+	})
+
 	// print(books) // print คือ แสดง memory address ของตัวแปร
 	app.Get("/books", middleware, getBooks)
 	app.Get("/books/:id", getBook)
