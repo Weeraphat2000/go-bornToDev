@@ -34,7 +34,7 @@ func main() {
 	emp := Employee{Name: "John", Salary: 1000}
 	emp.Name = "Hunter"
 	fmt.Println(emp.Name) // Hunter
-	emp.ChangeName("Doe") // การเปลี่ยนค่าของ struct โดยใช้ pointer จะเปลี่ยนค่าของ struct นั้นๆ
+	emp.ChangeName("Doe") // การเปลี่ยนค่าของ struct โดยใช้ pointer จะเปลี่ยนค่าของ struct นั้นๆได้
 	fmt.Println(emp.Name) // Doe
 
 	per := Person{Name: "John", Salary: 1000}
@@ -61,6 +61,7 @@ type Employee struct {
 
 func (e *Employee) ChangeName(newName string) {
 	e.Name = newName
+	// ทำให้ employee มี method ชื่อ ChangeName ที่รับค่า newName แล้วเปลี่ยนค่าของ Name ให้เป็น newName เพราะ pointer
 }
 
 type Person struct {
